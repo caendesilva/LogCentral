@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class LogController extends Controller
 {
@@ -25,7 +26,27 @@ class LogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'level' => [
+                'required',
+                Rule::in(['EMERGENCY','ALERT','CRITICAL','ERROR','WARNING','NOTICE','INFO','DEBUG']),
+            ],
+            'timestamp' => 'nullable|numeric|integer',
+            'label' => 'nullable|string|max:64',
+            'message' => 'required|string',
+            'context' => 'nullable|json',
+        ]);
+
+        $log = new Log($validated);
+        $log->user_id = 1; // Temporary until the feature is implemented
+        $log->team_id = 1; // Temporary until the feature is implemented
+        if ($log->save()) {
+            return response('Log Created Successfully', 201);
+        } else {
+            return response('Something went wrong on our end. If this persists, please contact our support.', 500);
+        }
+        
+
     }
 
     /**

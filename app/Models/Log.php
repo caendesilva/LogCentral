@@ -14,6 +14,15 @@ class Log extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'level', 'timestamp', 'label', 'message', 'context'
+    ];
+
+    /**
      * Get the user that owns the Log
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
