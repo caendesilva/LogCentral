@@ -1,26 +1,25 @@
 # Creating an API with Laravel - Part 3: Thinking about the migrations and learning how Monolog works
 
 ## The base migration 
-I want to start simple and expand outwards from there. I prefer stable, clean and testable code over being overwhelmed with features.
+**I want to start simple and expand outwards from there. I prefer stable, clean and testable code over being overwhelmed with features.**
 
 So, let's iron out the main database model.
 
 In no particular order, these are the basic fields/columns I think we will need.
 
-id: The primary index
-user_id: For the user it belongs to. If the log belongs to a team this would be the team admin's ID.
-team_id: I also want the team_id set up for when I add proper support for teams.
-level: The log level as per [rfc5424](https://datatracker.ietf.org/doc/html/rfc5424). Here I think I will use Enums.
-timestamp: I don't need updated_at times, and I don't think I want created_at either. I think this is one of those places a Unix Epoch timestamp is more suited. Note that we will use a 32 bit integer as that is the standard for Unix Time. This is susceptible to the [Y2K38](https://en.wikipedia.org/wiki/Year_2038_problem) problem though I am making the tradeoff here between future proofing and data size as there will be a lot of log entries.
-label: The server or app name. Used so the user can keep track of what the log is for. I'll set this to be 64 chars long and nullable. I think it makes sense for the label to default to the App Name unless overridden in an environment variable/the config.
+- id: The primary index
+- user_id: For the user it belongs to. If the log belongs to a team this would be the team admin's ID.
+- team_id: I also want the team_id set up for when I add proper support for teams.
+- level: The log level as per [rfc5424](https://datatracker.ietf.org/doc/html/rfc5424). Here I think I will use Enums.
+- timestamp: I don't need updated_at times, and I don't think I want created_at either. I think this is one of those places a Unix Epoch timestamp is more suited. Note that we will use a 32 bit integer as that is the standard for Unix Time. This is susceptible to the [Y2K38](https://en.wikipedia.org/wiki/Year_2038_problem) problem though I am making the tradeoff here between future proofing and data size as there will be a lot of log entries.
+- label: The server or app name. Used so the user can keep track of what the log is for. I'll set this to be 64 chars long and nullable. I think it makes sense for the label to default to the App Name unless overridden in an environment variable/the config.
 
 ## Looking into Monolog
 
 At this point you are probably thinking, "he forgot the log messages", and that is a fair assumption. To make sure I don't miss any important columns I decided to take a dive into the Monolog source code to see what fields we need and how long the messages may be.
 
 In case you didn't know, Monolog is what Laravel uses under the hood.
-@see https://laravel.com/docs/9.x/logging
-@see https://github.com/Seldaek/monolog
+> @see https://laravel.com/docs/9.x/logging and https://github.com/Seldaek/monolog
 
 I got lucky and the first class I found was `vendor\monolog\monolog\src\Monolog\Logger.php` which contains a great listing of the various log levels.
 ```php
