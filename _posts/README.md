@@ -1,0 +1,1 @@
+This directory contains the Markdown post files for the blog as it is more convenient for me to write them in the same place I write the code.
