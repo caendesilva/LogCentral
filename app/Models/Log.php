@@ -23,7 +23,7 @@ class Log extends Model
     ];
 
     /**
-     * Get the user that owns the Log
+     * Get the user that that submitted the log.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -33,7 +33,7 @@ class Log extends Model
     }
 
     /**
-     * Get the team that owns the Log
+     * Get the team that owns the Log.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

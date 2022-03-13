@@ -58,4 +58,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * Get all of the logs submitted with the User's tokens.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Log::class);
+    }
 }
