@@ -23,19 +23,19 @@ class ApiTokenPermissionsTest extends TestCase
         $token = $user->tokens()->create([
             'name' => 'Test Token',
             'token' => Str::random(40),
-            'abilities' => ['create', 'read'],
+            'abilities' => ['log:create', 'log:read'],
         ]);
 
         $response = $this->put('/user/api-tokens/'.$token->id, [
             'name' => $token->name,
             'permissions' => [
-                'delete',
-                'missing-permission',
+                'log:delete',
+                'log:missing-permission',
             ],
         ]);
 
-        $this->assertTrue($user->fresh()->tokens->first()->can('delete'));
-        $this->assertFalse($user->fresh()->tokens->first()->can('read'));
-        $this->assertFalse($user->fresh()->tokens->first()->can('missing-permission'));
+        $this->assertTrue($user->fresh()->tokens->first()->can('log:delete'));
+        $this->assertFalse($user->fresh()->tokens->first()->can('log:read'));
+        $this->assertFalse($user->fresh()->tokens->first()->can('log:missing-permission'));
     }
 }

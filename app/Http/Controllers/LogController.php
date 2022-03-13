@@ -29,7 +29,7 @@ class LogController extends Controller
      */
     public function store(Request $request, Team $team)
     {
-        // Authorize the team, user, and token
+        $this->authorize('create', [Log::class, $team]);
 
         $validated = $request->validate([
             'level' => [
@@ -43,12 +43,11 @@ class LogController extends Controller
         ]);
 
         // When we get to this point we already assume the token is valid authorized and belongs to a user so we don't need to validate it.
-        $token = PersonalAccessToken::findToken($request->bearerToken());
-        $user = $token->tokenable;
 
         $log = new Log($validated);
-        $log->user_id = $user->id;
-        $log->team_id = $team->id;
+        $log->user_id = $request->user()->id;
+        $team->logs()->save($log);
+
         if ($log->save()) {
             return response('Log Created Successfully', 201);
         } else {
