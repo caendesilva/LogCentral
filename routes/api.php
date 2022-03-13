@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/logs', LogController::class)->middleware('auth:sanctum');
+Route::post('/logs/{team}/store', [LogController::class, 'store'])->middleware('auth:sanctum');
+Route::apiResource('/logs', LogController::class)->except('store')->middleware('auth:sanctum');
